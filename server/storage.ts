@@ -257,22 +257,22 @@ export class MemStorage implements IStorage {
   formatBookingForWhatsApp(booking: Booking, tour: Tour | undefined): string {
     const totalPrice = tour ? tour.price * booking.guests : 0;
     
-    return `🏝️ *New Tour Booking Request*
+    return `*New Tour Booking Request*
 
-📋 *Booking Details:*
-• Name: ${booking.name}
-• Email: ${booking.email}
-• Phone: ${booking.phone}
+*Booking Details:*
+- Name: ${booking.name}
+- Email: ${booking.email}
+- Phone: ${booking.phone}
 
-🚢 *Tour Information:*
-• Tour: ${booking.tourName}
-• Date: ${booking.date}
-• Number of Guests: ${booking.guests}
+*Tour Information:*
+- Tour: ${booking.tourName}
+- Date: ${booking.date}
+- Number of Guests: ${booking.guests}
 
-💬 *Message:*
+*Message:*
 ${booking.message || "No additional message"}
 
-Total Estimate: ₱${totalPrice.toLocaleString()}`;
+Total Estimate: ${totalPrice.toLocaleString()} PHP`;
   }
 }
 

@@ -240,7 +240,7 @@ export default function Tours() {
                 </div>
               </Card>
             ))}
-          </div>
+            </div>
           )}
         </div>
       </section>
