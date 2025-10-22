@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logoUrl from "@assets/Arlyn-Expeditions-Logo_1761120970967.png";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,11 +41,11 @@ export function Navigation() {
           <div className="flex items-center justify-between h-20">
             <Link href="/" data-testid="link-home-logo">
               <div className="cursor-pointer">
-                <h1 className={`text-2xl md:text-3xl font-extrabold tracking-tight ${
-                  isScrolled ? "text-primary" : "text-white drop-shadow-lg"
-                }`}>
-                  Arlyn Expedition
-                </h1>
+                <img 
+                  src={logoUrl} 
+                  alt="Arlyn Expeditions Travel & Tours" 
+                  className="h-14 md:h-16 w-auto transition-all duration-300"
+                />
               </div>
             </Link>
 
