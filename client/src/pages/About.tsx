@@ -38,7 +38,7 @@ export default function About() {
             className="text-4xl md:text-6xl font-bold text-foreground mb-6"
             data-testid="text-about-title"
           >
-            About Arlyn Expedition
+            About Arlyn Expeditions Travel and Tours
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
             Your trusted partner for unforgettable island adventures in Coron, Palawan
@@ -55,20 +55,21 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-base text-foreground leading-relaxed">
                 <p>
-                  Arlyn Expedition was born from a deep love for the pristine islands of Coron, Palawan.
-                  Based in Barangay Poblacion 5, we've been helping travelers discover the breathtaking
-                  beauty of our home for years.
+                  Arlyn Expeditions Travel and Tours was founded from a deep passion for showcasing the pristine 
+                  islands of Coron, Palawan. Located at Real St., National Highway, Barangay Poblacion 5, in front 
+                  of Cafe Socorro, we've been helping travelers discover the breathtaking beauty of our paradise 
+                  for years.
                 </p>
                 <p>
-                  What started as a small family operation has grown into a trusted name in Coron tourism,
-                  but we've never forgotten our roots. We remain committed to providing authentic,
-                  personalized experiences that showcase the best of Palawan while supporting our local
-                  community.
+                  What started as a dream to share Coron's hidden gems has grown into a trusted name in Palawan 
+                  tourism. We specialize in creating authentic, personalized island-hopping adventures that showcase 
+                  the best of Coron - from the world-famous Kayangan Lake to the pristine Twin Lagoons, and everything 
+                  in between.
                 </p>
                 <p>
-                  Every member of our team is a passionate local who knows these islands like the back of
-                  their hand. We don't just guide tours – we share our home with you, creating memories
-                  that last a lifetime.
+                  Every member of our team is a passionate local guide who knows these islands intimately. We don't 
+                  just lead tours – we share our home, our stories, and our love for Palawan with you, creating 
+                  unforgettable memories that last a lifetime. Your adventure is our mission.
                 </p>
               </div>
             </div>
@@ -76,7 +77,7 @@ export default function About() {
             <div className="rounded-xl overflow-hidden shadow-2xl">
               <img
                 src={teamImage}
-                alt="Arlyn Expedition Team"
+                alt="Arlyn Expeditions Travel and Tours Team"
                 className="w-full h-auto"
                 data-testid="img-team-photo"
               />
@@ -119,7 +120,7 @@ export default function About() {
             Meet Our Team
           </h2>
           <p className="text-lg text-foreground leading-relaxed mb-8">
-            Our experienced local guides are the heart of Arlyn Expedition. Each team member brings
+            Our experienced local guides are the heart of Arlyn Expeditions Travel and Tours. Each team member brings
             unique knowledge of Coron's hidden gems, local culture, and marine ecosystems. They're
             not just guides – they're storytellers, safety experts, and passionate ambassadors of
             Palawan's natural wonders.

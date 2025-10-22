@@ -173,7 +173,7 @@ export default function BookingPage() {
                       <Select
                         onValueChange={(value) => {
                           setValue("tourId", value);
-                          const tour = tours.find((t) => t.id === value);
+                          const tour = tours?.find((t) => t.id === value);
                           if (tour) {
                             setValue("tourName", tour.name);
                           }

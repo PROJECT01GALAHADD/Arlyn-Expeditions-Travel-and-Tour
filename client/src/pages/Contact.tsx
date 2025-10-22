@@ -6,7 +6,7 @@ import { SiTiktok, SiWhatsapp } from "react-icons/si";
 export default function Contact() {
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent("Hi! I'd like to inquire about your tours.");
-    window.open(`https://wa.me/63XXXXXXXXXX?text=${message}`, "_blank");
+    window.open(`https://wa.me/639954948681?text=${message}`, "_blank");
   };
 
   return (
@@ -40,9 +40,10 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold mb-1">Our Location</h3>
                       <p className="text-muted-foreground">
+                        Real St., National Highway<br />
                         Barangay Poblacion 5<br />
-                        Coron, Palawan<br />
-                        Philippines
+                        In front of Cafe Socorro<br />
+                        Coron, Palawan, Philippines
                       </p>
                     </div>
                   </div>
@@ -55,7 +56,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="font-bold mb-1">Phone</h3>
-                      <p className="text-muted-foreground">+63 XXX XXX XXXX</p>
+                      <p className="text-muted-foreground">+63 995 494 8681</p>
                       <Button
                         onClick={handleWhatsAppClick}
                         className="mt-3 gap-2"
@@ -94,7 +95,7 @@ export default function Contact() {
                     <div>
                       <h3 className="font-bold mb-1">Business Hours</h3>
                       <div className="text-muted-foreground space-y-1">
-                        <p>Monday - Sunday: 6:00 AM - 8:00 PM</p>
+                        <p>Monday - Sunday: 6:00 AM - 10:00 PM</p>
                         <p className="text-sm">We're available every day to serve you!</p>
                       </div>
                     </div>
@@ -106,7 +107,7 @@ export default function Contact() {
                 <h3 className="text-xl font-bold mb-4">Follow Us</h3>
                 <div className="flex gap-3">
                   <a
-                    href="https://facebook.com"
+                    href="https://www.facebook.com/GoArlynExpeditionsCORON"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-primary hover:bg-primary/90 text-white flex items-center justify-center transition-colors"
@@ -116,7 +117,7 @@ export default function Contact() {
                     <Facebook className="w-6 h-6" />
                   </a>
                   <a
-                    href="https://instagram.com"
+                    href="https://www.instagram.com/arlynexpeditions_tours/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-primary hover:bg-primary/90 text-white flex items-center justify-center transition-colors"
@@ -126,7 +127,7 @@ export default function Contact() {
                     <Instagram className="w-6 h-6" />
                   </a>
                   <a
-                    href="https://tiktok.com"
+                    href="https://www.tiktok.com/@arlynmartinico"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 rounded-full bg-primary hover:bg-primary/90 text-white flex items-center justify-center transition-colors"
@@ -150,7 +151,7 @@ export default function Contact() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Arlyn Expedition Location"
+                  title="Arlyn Expeditions Travel and Tours Location"
                   data-testid="map-location"
                 ></iframe>
               </Card>
