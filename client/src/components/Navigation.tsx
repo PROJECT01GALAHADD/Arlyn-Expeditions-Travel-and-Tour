@@ -46,7 +46,7 @@ export function Navigation() {
                   alt="Arlyn Expeditions" 
                   className="h-14 md:h-16 w-auto transition-all duration-300"
                 />
-                <h1 className={`text-xl md:text-2xl font-extrabold tracking-tight ${
+                <h1 className={`text-lg md:text-xl font-extrabold tracking-tight ${
                   isScrolled ? "text-primary" : "text-white drop-shadow-lg"
                 }`}>
                   Arlyn Expeditions

@@ -54,7 +54,7 @@ export default function Home() {
               className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-2xl"
               data-testid="text-hero-title"
             >
-              Arlyn Expeditions Travel and Tour
+              Arlyn Expeditions Travel and Tours
             </h1>
           </div>
           <p

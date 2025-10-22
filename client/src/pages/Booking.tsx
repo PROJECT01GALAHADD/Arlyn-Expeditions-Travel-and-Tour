@@ -50,7 +50,7 @@ export default function BookingPage() {
       return await apiRequest("POST", "/api/bookings", data);
     },
     onSuccess: (response: any) => {
-      const whatsappUrl = `https://wa.me/63XXXXXXXXXX?text=${encodeURIComponent(response.whatsappMessage)}`;
+      const whatsappUrl = `https://wa.me/639954948681?text=${encodeURIComponent(response.whatsappMessage)}`;
       window.open(whatsappUrl, "_blank");
       
       toast({
