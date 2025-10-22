@@ -6,6 +6,7 @@ import heroImage from "@assets/generated_images/Coron_islands_aerial_hero_f326fa
 import tourImage1 from "@assets/generated_images/Twin_Lagoon_kayaking_Coron_ccdecb05.png";
 import tourImage2 from "@assets/generated_images/Kayangan_Lake_viewpoint_Coron_0b301942.png";
 import tourImage3 from "@assets/generated_images/Calauit_Safari_giraffes_Palawan_9fdfd4c3.png";
+import logoUrl from "@assets/Arlyn-Expeditions-Logo_1761120970967.png";
 
 export default function Home() {
   const featuredTours = [
@@ -43,17 +44,24 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-2xl"
-            data-testid="text-hero-title"
-          >
-            Arlyn Expedition
-          </h1>
+          <div className="flex flex-col items-center mb-6">
+            <img 
+              src={logoUrl} 
+              alt="Arlyn Expeditions Travel and Tour" 
+              className="h-32 md:h-40 lg:h-48 w-auto mb-4 drop-shadow-2xl"
+            />
+            <h1
+              className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-2xl"
+              data-testid="text-hero-title"
+            >
+              Arlyn Expeditions Travel and Tour
+            </h1>
+          </div>
           <p
             className="text-xl md:text-2xl text-white mb-8 font-normal drop-shadow-lg"
             data-testid="text-hero-tagline"
           >
-            Explore Paradise with Arlyn Expedition
+            Explore Paradise with Arlyn Expeditions
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/booking">
@@ -87,7 +95,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-              Why Choose Arlyn Expedition?
+              Why Choose Arlyn Expeditions?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Experience the best of Coron with our expert guides and unforgettable adventures

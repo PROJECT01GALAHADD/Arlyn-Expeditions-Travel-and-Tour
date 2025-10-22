@@ -40,12 +40,17 @@ export function Navigation() {
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-20">
             <Link href="/" data-testid="link-home-logo">
-              <div className="cursor-pointer">
+              <div className="cursor-pointer flex items-center gap-3">
                 <img 
                   src={logoUrl} 
-                  alt="Arlyn Expeditions Travel & Tours" 
+                  alt="Arlyn Expeditions" 
                   className="h-14 md:h-16 w-auto transition-all duration-300"
                 />
+                <h1 className={`text-xl md:text-2xl font-extrabold tracking-tight ${
+                  isScrolled ? "text-primary" : "text-white drop-shadow-lg"
+                }`}>
+                  Arlyn Expeditions
+                </h1>
               </div>
             </Link>
 
