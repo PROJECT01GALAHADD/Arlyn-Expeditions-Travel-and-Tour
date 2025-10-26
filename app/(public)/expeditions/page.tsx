@@ -44,15 +44,25 @@ export default function ExpeditionsPage() {
 
   return (
     <div className="min-h-screen pt-20">
+      <section className="relative h-[50vh] flex items-center justify-center mb-16">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(/images/arlyn-expeditions-2.png)` }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl">
+            Our Expeditions
+          </h1>
+          <p className="text-xl text-white max-w-2xl mx-auto drop-shadow-lg">
+            Embark on unforgettable adventures and create lasting memories in Coron
+          </p>
+        </div>
+      </section>
+
       <section className="py-16 md:py-24 bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Our Expeditions
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Embark on unforgettable adventures and create lasting memories in Coron
-            </p>
           </div>
 
           {featuredExpeditions.length > 0 && (

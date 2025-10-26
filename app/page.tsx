@@ -19,7 +19,7 @@ export default async function Home() {
       <section className="relative h-screen flex items-center justify-center">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(/images/kayangan_lake_coron__f84db1ad.jpg)` }}
+          style={{ backgroundImage: `url(/images/arlyn-expeditions-3.png)` }}
         >
           <div className="absolute inset-0 bg-black/40"></div>
         </div>

@@ -117,16 +117,25 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen pt-20 pb-16">
-      <div className="max-w-3xl mx-auto px-4 md:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+    <div className="min-h-screen pt-20">
+      <section className="relative h-[40vh] flex items-center justify-center mb-16">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(/images/arlyn-expeditions-4.png)` }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-2xl">
             Book Your Adventure
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-white drop-shadow-lg">
             Fill out the form below to reserve your tour or expedition
           </p>
         </div>
+      </section>
+
+      <div className="max-w-3xl mx-auto px-4 md:px-8 pb-16">
 
         <Card className="p-6 md:p-8">
           <Form {...form}>

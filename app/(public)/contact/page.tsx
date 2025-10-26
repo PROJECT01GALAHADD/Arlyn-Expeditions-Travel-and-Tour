@@ -5,16 +5,25 @@ import { SiTiktok } from "react-icons/si";
 export default function ContactPage() {
   return (
     <div className="min-h-screen pt-20">
+      <section className="relative h-[50vh] flex items-center justify-center mb-16">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(/images/kayangan-lake-boats.png)` }}
+        >
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl">
+            Contact Us
+          </h1>
+          <p className="text-xl text-white max-w-2xl mx-auto drop-shadow-lg">
+            Get in touch with us to plan your perfect Coron adventure
+          </p>
+        </div>
+      </section>
+
       <section className="py-16 md:py-24 bg-gradient-to-b from-background to-card">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              Contact Us
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get in touch with us to plan your perfect Coron adventure
-            </p>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
             <Card className="p-6 text-center hover-elevate">
