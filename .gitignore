@@ -14,3 +14,4 @@ external_imports/extracted/
 !external_imports/README.md
 !external_imports/manifest.json
 .next/
+.vercel/
