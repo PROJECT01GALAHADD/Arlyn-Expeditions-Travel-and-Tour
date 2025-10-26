@@ -25,6 +25,7 @@ export function Navigation() {
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
     { path: "/tours", label: "Tours" },
+    { path: "/expeditions", label: "Expeditions" },
     { path: "/gallery", label: "Gallery" },
     { path: "/booking", label: "Booking" },
     { path: "/contact", label: "Contact" },

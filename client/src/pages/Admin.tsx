@@ -4,391 +4,285 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Plus, Lock, Loader2 } from "lucide-react";
+import { Calendar, Users, Mail, Phone, LogOut, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { Post, InsertPost } from "@shared/schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type Login, type Booking } from "@shared/schema";
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [postType, setPostType] = useState<"news" | "promo" | "update">("news");
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    publishDate: "",
-    published: false,
-  });
+  const [operatorName, setOperatorName] = useState("");
   const { toast } = useToast();
 
-  const { data: posts, isLoading } = useQuery<Post[]>({
-    queryKey: ["/api/posts"],
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Login>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const { data: bookings, isLoading: isLoadingBookings } = useQuery<Booking[]>({
+    queryKey: ["/api/bookings"],
     enabled: isAuthenticated,
   });
 
-  const createMutation = useMutation({
-    mutationFn: async (data: InsertPost) => {
-      return await apiRequest("POST", "/api/posts", data);
+  const loginMutation = useMutation({
+    mutationFn: async (data: Login) => {
+      return await apiRequest("POST", "/api/auth/login", data);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/posts"] });
-      setIsDialogOpen(false);
-      resetForm();
-      toast({
-        title: "Success",
-        description: "Post created successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to create post",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<InsertPost> }) => {
-      return await apiRequest("PUT", `/api/posts/${id}`, data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/posts"] });
-      setIsDialogOpen(false);
-      resetForm();
-      toast({
-        title: "Success",
-        description: "Post updated successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to update post",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      return await apiRequest("DELETE", `/api/posts/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/posts"] });
-      toast({
-        title: "Success",
-        description: "Post deleted successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to delete post",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const resetForm = () => {
-    setFormData({
-      title: "",
-      content: "",
-      publishDate: "",
-      published: false,
-    });
-    setEditingPost(null);
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === "admin123") {
+    onSuccess: (data: any) => {
       setIsAuthenticated(true);
+      setOperatorName(data.operator.name);
       toast({
         title: "Login successful",
-        description: "Welcome to the admin panel",
+        description: `Welcome back, ${data.operator.name}!`,
       });
-    } else {
+    },
+    onError: () => {
       toast({
         title: "Login failed",
-        description: "Incorrect password",
+        description: "Invalid username or password",
         variant: "destructive",
       });
-    }
+    },
+  });
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest("POST", "/api/auth/logout", {});
+    },
+    onSuccess: () => {
+      setIsAuthenticated(false);
+      setOperatorName("");
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully",
+      });
+    },
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+      return await apiRequest("PATCH", `/api/bookings/${id}/status`, { status });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
+      toast({
+        title: "Status updated",
+        description: "Booking status has been updated successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update booking status",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onLogin = async (data: Login) => {
+    loginMutation.mutate(data);
   };
 
-  const handleCreatePost = () => {
-    resetForm();
-    setIsDialogOpen(true);
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
-  const handleEditPost = (post: Post) => {
-    setEditingPost(post);
-    setFormData({
-      title: post.title,
-      content: post.content,
-      publishDate: post.publishDate,
-      published: post.published,
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleDeletePost = (id: string) => {
-    if (confirm("Are you sure you want to delete this post?")) {
-      deleteMutation.mutate(id);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const postData: InsertPost = {
-      type: postType,
-      title: formData.title,
-      content: formData.content,
-      publishDate: formData.publishDate,
-      published: formData.published,
-    };
-
-    if (editingPost) {
-      updateMutation.mutate({ id: editingPost.id, data: postData });
-    } else {
-      createMutation.mutate(postData);
-    }
+  const handleStatusUpdate = (bookingId: string, status: string) => {
+    updateStatusMutation.mutate({ id: bookingId, status });
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[hsl(40,45%,85%)]">
-        <Card className="w-full max-w-md p-8">
+      <div className="min-h-screen pt-20 flex items-center justify-center bg-gradient-to-b from-background to-card">
+        <Card className="p-8 w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-primary" />
-            </div>
-            <h1 className="text-3xl font-bold mb-2">Admin Panel</h1>
-            <p className="text-muted-foreground">Enter password to access CMS</p>
+            <h1 className="text-3xl font-bold mb-2">Operator Dashboard</h1>
+            <p className="text-muted-foreground">Please log in to continue</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSubmit(onLogin)} className="space-y-6">
+            <div>
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                {...register("username")}
+                placeholder="Enter your username"
+                data-testid="input-username"
+              />
+              {errors.username && (
+                <p className="text-sm text-destructive mt-1">{errors.username.message}</p>
+              )}
+            </div>
+
             <div>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
-                data-testid="input-admin-password"
+                {...register("password")}
+                placeholder="Enter your password"
+                data-testid="input-password"
               />
+              {errors.password && (
+                <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
+              )}
             </div>
-            <Button type="submit" className="w-full" data-testid="button-admin-login">
-              Login
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSubmitting || loginMutation.isPending}
+              data-testid="button-login"
+            >
+              {(isSubmitting || loginMutation.isPending) ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
           </form>
+
+          <div className="mt-6 p-4 bg-muted rounded-lg">
+            <p className="text-sm text-muted-foreground text-center">
+              <strong>Default Login:</strong><br />
+              Username: operator<br />
+              Password: operator123
+            </p>
+          </div>
         </Card>
       </div>
     );
   }
 
-  const filteredPosts = (type: string) => posts?.filter((p) => p.type === type) || [];
-
   return (
-    <div className="min-h-screen pt-20 bg-background">
-      <section className="py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-4xl font-bold" data-testid="text-admin-title">
-                Content Management
-              </h1>
-              <p className="text-muted-foreground mt-2">
-                Manage news, promos, and tour updates
-              </p>
-            </div>
-            <Button onClick={() => setIsAuthenticated(false)} variant="outline">
-              Logout
-            </Button>
+    <div className="min-h-screen pt-20 pb-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Operator Dashboard</h1>
+            <p className="text-muted-foreground">Welcome back, {operatorName}!</p>
           </div>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            data-testid="button-logout"
+            className="gap-2"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </Button>
+        </div>
 
-          <Tabs defaultValue="news" onValueChange={(value) => setPostType(value as any)}>
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="news" data-testid="tab-news">
-                News
-              </TabsTrigger>
-              <TabsTrigger value="promo" data-testid="tab-promos">
-                Promos
-              </TabsTrigger>
-              <TabsTrigger value="update" data-testid="tab-updates">
-                Updates
-              </TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="bookings" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="bookings">Bookings</TabsTrigger>
+            <TabsTrigger value="chat">Chat Sessions</TabsTrigger>
+          </TabsList>
 
-            {["news", "promo", "update"].map((type) => (
-              <TabsContent key={type} value={type} className="mt-8">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold capitalize">{type}s</h2>
-                  <Button
-                    onClick={handleCreatePost}
-                    className="gap-2"
-                    data-testid={`button-create-${type}`}
-                  >
-                    <Plus className="w-4 h-4" />
-                    Create {type}
-                  </Button>
-                </div>
-
-                {isLoading ? (
-                  <div className="text-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                    <p className="text-muted-foreground mt-4">Loading...</p>
-                  </div>
-                ) : filteredPosts(type).length === 0 ? (
-                  <Card className="p-12 text-center">
-                    <p className="text-muted-foreground">No {type}s yet. Create one to get started!</p>
-                  </Card>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredPosts(type).map((post) => (
-                      <Card key={post.id} className="p-6 hover-elevate" data-testid={`card-post-${post.id}`}>
-                        <div className="flex items-start justify-between mb-3">
-                          <Badge variant={post.published ? "default" : "secondary"}>
-                            {post.published ? "Published" : "Draft"}
-                          </Badge>
-                          <div className="flex gap-2">
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => handleEditPost(post)}
-                              data-testid={`button-edit-${post.id}`}
-                              disabled={deleteMutation.isPending}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => handleDeletePost(post.id)}
-                              data-testid={`button-delete-${post.id}`}
-                              disabled={deleteMutation.isPending}
-                            >
-                              {deleteMutation.isPending ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                              ) : (
-                                <Trash2 className="w-4 h-4" />
-                              )}
-                            </Button>
+          <TabsContent value="bookings">
+            {isLoadingBookings ? (
+              <div className="text-center py-16">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+                <p className="text-muted-foreground">Loading bookings...</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {(bookings || []).map((booking) => (
+                  <Card key={booking.id} className="p-6" data-testid={`card-booking-${booking.id}`}>
+                    <div className="flex flex-wrap gap-4 justify-between items-start mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold mb-2">{booking.name}</h3>
+                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Mail className="w-4 h-4" />
+                            {booking.email}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Phone className="w-4 h-4" />
+                            {booking.phone}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {booking.date}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Users className="w-4 h-4" />
+                            {booking.guests} guests
                           </div>
                         </div>
-                        <h3 className="text-lg font-bold mb-2">{post.title}</h3>
-                        <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
-                          {post.content}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Publish: {new Date(post.publishDate).toLocaleDateString()}
-                        </p>
-                      </Card>
-                    ))}
+                      </div>
+                      <Badge
+                        variant={
+                          booking.status === "confirmed"
+                            ? "default"
+                            : booking.status === "pending"
+                            ? "secondary"
+                            : "destructive"
+                        }
+                      >
+                        {booking.status}
+                      </Badge>
+                    </div>
+
+                    {booking.message && (
+                      <div className="mb-4 p-3 bg-muted rounded-lg">
+                        <p className="text-sm"><strong>Message:</strong> {booking.message}</p>
+                      </div>
+                    )}
+
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        onClick={() => handleStatusUpdate(booking.id, "confirmed")}
+                        disabled={booking.status === "confirmed"}
+                      >
+                        Confirm
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleStatusUpdate(booking.id, "cancelled")}
+                        disabled={booking.status === "cancelled"}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+
+                {(!bookings || bookings.length === 0) && (
+                  <div className="text-center py-16">
+                    <p className="text-muted-foreground">No bookings yet</p>
                   </div>
                 )}
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
-      </section>
+              </div>
+            )}
+          </TabsContent>
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>
-              {editingPost ? "Edit" : "Create"} {postType}
-            </DialogTitle>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                placeholder="Enter title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                data-testid="input-post-title"
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="content">Content</Label>
-              <Textarea
-                id="content"
-                placeholder="Enter content"
-                rows={6}
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                data-testid="textarea-post-content"
-                required
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="publishDate">Publish Date</Label>
-              <Input
-                id="publishDate"
-                type="date"
-                value={formData.publishDate}
-                onChange={(e) => setFormData({ ...formData, publishDate: e.target.value })}
-                data-testid="input-publish-date"
-                required
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="published"
-                checked={formData.published}
-                onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                data-testid="checkbox-published"
-              />
-              <Label htmlFor="published">Publish immediately</Label>
-            </div>
-
-            <div className="flex gap-3 justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  resetForm();
-                }}
-                disabled={createMutation.isPending || updateMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit" 
-                data-testid="button-save-post"
-                disabled={createMutation.isPending || updateMutation.isPending}
-              >
-                {(createMutation.isPending || updateMutation.isPending) ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Saving...
-                  </>
-                ) : (
-                  "Save"
-                )}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+          <TabsContent value="chat">
+            <Card className="p-8 text-center">
+              <p className="text-muted-foreground">
+                Chat functionality will be available in a future update
+              </p>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

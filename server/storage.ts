@@ -1,279 +1,170 @@
-import { type Post, type InsertPost, type Tour, type Booking } from "@shared/schema";
-import { randomUUID } from "crypto";
-import * as fs from "fs/promises";
-import * as path from "path";
+import { db } from "./db";
+import { eq, desc, and, or } from "drizzle-orm";
+import {
+  tours,
+  expeditions,
+  bookings,
+  tourOperators,
+  chatMessages,
+  chatSessions,
+  type Tour,
+  type InsertTour,
+  type Expedition,
+  type InsertExpedition,
+  type Booking,
+  type InsertBooking,
+  type TourOperator,
+  type InsertTourOperator,
+  type ChatMessage,
+  type InsertChatMessage,
+  type ChatSession,
+  type InsertChatSession,
+} from "@shared/schema";
+import bcrypt from "bcryptjs";
 
 export interface IStorage {
-  getAllPosts(): Promise<Post[]>;
-  getPostById(id: string): Promise<Post | undefined>;
-  getPostsByType(type: "news" | "promo" | "update"): Promise<Post[]>;
-  createPost(post: InsertPost): Promise<Post>;
-  updatePost(id: string, post: Partial<InsertPost>): Promise<Post | undefined>;
-  deletePost(id: string): Promise<boolean>;
-  verifyAdminPassword(password: string): boolean;
-  
   getAllTours(): Promise<Tour[]>;
   getTourById(id: string): Promise<Tour | undefined>;
+  createTour(tour: InsertTour): Promise<Tour>;
   
-  createBooking(booking: Booking): Promise<Booking & { id: string; createdAt: string }>;
-  formatBookingForWhatsApp(booking: Booking, tour: Tour | undefined): string;
+  getAllExpeditions(): Promise<Expedition[]>;
+  getExpeditionById(id: string): Promise<Expedition | undefined>;
+  createExpedition(expedition: InsertExpedition): Promise<Expedition>;
+  
+  createBooking(booking: InsertBooking): Promise<Booking>;
+  getAllBookings(): Promise<Booking[]>;
+  getBookingById(id: string): Promise<Booking | undefined>;
+  updateBookingStatus(id: string, status: string): Promise<Booking | undefined>;
+  
+  createTourOperator(operator: InsertTourOperator): Promise<TourOperator>;
+  getTourOperatorByUsername(username: string): Promise<TourOperator | undefined>;
+  verifyOperatorPassword(username: string, password: string): Promise<boolean>;
+  
+  getChatSessionById(id: string): Promise<ChatSession | undefined>;
+  createChatSession(session: InsertChatSession): Promise<ChatSession>;
+  getAllChatSessions(): Promise<ChatSession[]>;
+  updateChatSession(id: string, updates: Partial<ChatSession>): Promise<ChatSession | undefined>;
+  
+  getChatMessagesBySession(sessionId: string): Promise<ChatMessage[]>;
+  createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
 }
 
-export class MemStorage implements IStorage {
-  private posts: Map<string, Post>;
-  private tours: Map<string, Tour>;
-  private postsFilePath: string;
-  private adminPassword = "admin123";
-
-  constructor() {
-    this.posts = new Map();
-    this.tours = new Map();
-    this.postsFilePath = path.join(process.cwd(), "data", "posts.json");
-    this.loadPosts();
-    this.initializeTours();
-  }
-
-  private async loadPosts() {
-    try {
-      const dataDir = path.join(process.cwd(), "data");
-      await fs.mkdir(dataDir, { recursive: true });
-      
-      const data = await fs.readFile(this.postsFilePath, "utf-8");
-      const posts: Post[] = JSON.parse(data);
-      posts.forEach((post) => this.posts.set(post.id, post));
-    } catch (error) {
-      this.posts = new Map();
-    }
-  }
-
-  private async savePosts() {
-    try {
-      const dataDir = path.join(process.cwd(), "data");
-      await fs.mkdir(dataDir, { recursive: true });
-      
-      const posts = Array.from(this.posts.values());
-      await fs.writeFile(this.postsFilePath, JSON.stringify(posts, null, 2));
-    } catch (error) {
-      console.error("Error saving posts:", error);
-    }
-  }
-
-  async getAllPosts(): Promise<Post[]> {
-    return Array.from(this.posts.values()).sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async getPostById(id: string): Promise<Post | undefined> {
-    return this.posts.get(id);
-  }
-
-  async getPostsByType(type: "news" | "promo" | "update"): Promise<Post[]> {
-    return Array.from(this.posts.values())
-      .filter((post) => post.type === type)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
-  async createPost(insertPost: InsertPost): Promise<Post> {
-    const id = randomUUID();
-    const createdAt = new Date().toISOString();
-    const post: Post = { ...insertPost, id, createdAt };
-    this.posts.set(id, post);
-    await this.savePosts();
-    return post;
-  }
-
-  async updatePost(id: string, updateData: Partial<InsertPost>): Promise<Post | undefined> {
-    const existingPost = this.posts.get(id);
-    if (!existingPost) {
-      return undefined;
-    }
-    
-    const updatedPost: Post = { ...existingPost, ...updateData };
-    this.posts.set(id, updatedPost);
-    await this.savePosts();
-    return updatedPost;
-  }
-
-  async deletePost(id: string): Promise<boolean> {
-    const deleted = this.posts.delete(id);
-    if (deleted) {
-      await this.savePosts();
-    }
-    return deleted;
-  }
-
-  verifyAdminPassword(password: string): boolean {
-    return password === this.adminPassword;
-  }
-
-  private initializeTours() {
-    const tours: Tour[] = [
-      {
-        id: "coron-ultimate",
-        name: "Coron Ultimate Tour",
-        slug: "coron-ultimate",
-        description: "Discover the most iconic destinations of Coron in this comprehensive full-day tour. Visit pristine lagoons, snorkel in crystal-clear waters, and witness breathtaking limestone formations.",
-        shortDescription: "Experience the best of Coron in one incredible day",
-        price: 2500,
-        duration: "8-9 hours",
-        maxGuests: 15,
-        images: ["twin-lagoon.png", "underwater-coral.png", "island-hopping.png"],
-        inclusions: [
-          "Hotel pickup and drop-off",
-          "Licensed tour guide",
-          "Lunch and snacks",
-          "Snorkeling equipment",
-          "Environmental fees",
-          "Life jackets",
-        ],
-        highlights: [
-          "Twin Lagoon kayaking",
-          "Skeleton Wreck snorkeling",
-          "CYC Beach lunch",
-          "Sunset at Coral Garden",
-        ],
-        featured: true,
-      },
-      {
-        id: "kayangan-lake",
-        name: "Kayangan Lake Tour",
-        slug: "kayangan-lake",
-        description: "Kayangan Lake is consistently rated as one of the cleanest lakes in Asia. Climb to the iconic viewpoint and swim in the crystal-clear waters surrounded by dramatic limestone cliffs.",
-        shortDescription: "Visit the cleanest lake in the Philippines",
-        price: 2000,
-        duration: "4-5 hours",
-        maxGuests: 20,
-        images: ["kayangan-lake.png", "twin-lagoon.png"],
-        inclusions: [
-          "Round-trip boat transfer",
-          "Tour guide",
-          "Entrance fees",
-          "Snorkeling gear",
-          "Safety equipment",
-        ],
-        highlights: [
-          "Iconic viewpoint photo op",
-          "Swimming in crystal waters",
-          "Limestone cave exploration",
-          "Hidden lagoon visit",
-        ],
-        featured: true,
-      },
-      {
-        id: "calauit-safari",
-        name: "Calauit Safari Adventure",
-        slug: "calauit-safari",
-        description: "Experience a unique combination of African safari and tropical island paradise. Meet giraffes, zebras, and other exotic wildlife in their natural island habitat.",
-        shortDescription: "Wildlife sanctuary meets tropical paradise",
-        price: 3500,
-        duration: "Full day",
-        maxGuests: 12,
-        images: ["calauit-safari.png", "kayangan-lake.png"],
-        inclusions: [
-          "Private boat transfer",
-          "Safari guide",
-          "Lunch",
-          "Park entrance fees",
-          "Wildlife feeding experience",
-          "Photography assistance",
-        ],
-        highlights: [
-          "Giraffe and zebra encounters",
-          "Beach picnic lunch",
-          "Bird watching",
-          "Sunset island cruise",
-        ],
-        featured: true,
-      },
-      {
-        id: "private-charter",
-        name: "Private Island Charter",
-        slug: "private-charter",
-        description: "Charter your own private boat and create a personalized itinerary. Perfect for families, groups, or special occasions. Visit the destinations you want at your own pace.",
-        shortDescription: "Customize your perfect island adventure",
-        price: 15000,
-        duration: "Flexible (8-10 hours)",
-        maxGuests: 10,
-        images: ["private-charter.png", "underwater-coral.png"],
-        inclusions: [
-          "Private luxury boat",
-          "Dedicated crew and guide",
-          "Customizable itinerary",
-          "Lunch and refreshments",
-          "Snorkeling equipment",
-          "All entrance fees",
-          "Photography service",
-        ],
-        highlights: [
-          "Flexible schedule",
-          "Exclusive destinations",
-          "VIP treatment",
-          "Perfect for celebrations",
-        ],
-        featured: true,
-      },
-    ];
-
-    tours.forEach((tour) => this.tours.set(tour.id, tour));
-  }
-
+export class DatabaseStorage implements IStorage {
   async getAllTours(): Promise<Tour[]> {
-    return Array.from(this.tours.values());
+    return await db.select().from(tours).orderBy(desc(tours.featured), tours.name);
   }
 
   async getTourById(id: string): Promise<Tour | undefined> {
-    return this.tours.get(id);
+    const [tour] = await db.select().from(tours).where(eq(tours.id, id));
+    return tour || undefined;
   }
 
-  async createBooking(booking: Booking): Promise<Booking & { id: string; createdAt: string }> {
-    const id = randomUUID();
-    const createdAt = new Date().toISOString();
-    const bookingWithMeta = { ...booking, id, createdAt };
-    
-    try {
-      const dataDir = path.join(process.cwd(), "data");
-      await fs.mkdir(dataDir, { recursive: true });
-      
-      const bookingsFilePath = path.join(dataDir, "bookings.json");
-      let bookings: any[] = [];
-      
-      try {
-        const data = await fs.readFile(bookingsFilePath, "utf-8");
-        bookings = JSON.parse(data);
-      } catch {
-        bookings = [];
-      }
-      
-      bookings.push(bookingWithMeta);
-      await fs.writeFile(bookingsFilePath, JSON.stringify(bookings, null, 2));
-    } catch (error) {
-      console.error("Error saving booking:", error);
-    }
-    
-    return bookingWithMeta;
+  async createTour(insertTour: InsertTour): Promise<Tour> {
+    const [tour] = await db.insert(tours).values(insertTour).returning();
+    return tour;
   }
 
-  formatBookingForWhatsApp(booking: Booking, tour: Tour | undefined): string {
-    const totalPrice = tour ? tour.price * booking.guests : 0;
+  async getAllExpeditions(): Promise<Expedition[]> {
+    return await db.select().from(expeditions).orderBy(desc(expeditions.featured), expeditions.name);
+  }
+
+  async getExpeditionById(id: string): Promise<Expedition | undefined> {
+    const [expedition] = await db.select().from(expeditions).where(eq(expeditions.id, id));
+    return expedition || undefined;
+  }
+
+  async createExpedition(insertExpedition: InsertExpedition): Promise<Expedition> {
+    const [expedition] = await db.insert(expeditions).values(insertExpedition).returning();
+    return expedition;
+  }
+
+  async createBooking(insertBooking: InsertBooking): Promise<Booking> {
+    const [booking] = await db.insert(bookings).values(insertBooking).returning();
+    return booking;
+  }
+
+  async getAllBookings(): Promise<Booking[]> {
+    return await db.select().from(bookings).orderBy(desc(bookings.createdAt));
+  }
+
+  async getBookingById(id: string): Promise<Booking | undefined> {
+    const [booking] = await db.select().from(bookings).where(eq(bookings.id, id));
+    return booking || undefined;
+  }
+
+  async updateBookingStatus(id: string, status: string): Promise<Booking | undefined> {
+    const [booking] = await db
+      .update(bookings)
+      .set({ status })
+      .where(eq(bookings.id, id))
+      .returning();
+    return booking || undefined;
+  }
+
+  async createTourOperator(insertOperator: InsertTourOperator): Promise<TourOperator> {
+    const hashedPassword = await bcrypt.hash(insertOperator.password, 10);
+    const [operator] = await db
+      .insert(tourOperators)
+      .values({ ...insertOperator, password: hashedPassword })
+      .returning();
+    return operator;
+  }
+
+  async getTourOperatorByUsername(username: string): Promise<TourOperator | undefined> {
+    const [operator] = await db
+      .select()
+      .from(tourOperators)
+      .where(eq(tourOperators.username, username));
+    return operator || undefined;
+  }
+
+  async verifyOperatorPassword(username: string, password: string): Promise<boolean> {
+    const operator = await this.getTourOperatorByUsername(username);
+    if (!operator) return false;
+    return await bcrypt.compare(password, operator.password);
+  }
+
+  async getChatSessionById(id: string): Promise<ChatSession | undefined> {
+    const [session] = await db.select().from(chatSessions).where(eq(chatSessions.id, id));
+    return session || undefined;
+  }
+
+  async createChatSession(insertSession: InsertChatSession): Promise<ChatSession> {
+    const [session] = await db.insert(chatSessions).values(insertSession).returning();
+    return session;
+  }
+
+  async getAllChatSessions(): Promise<ChatSession[]> {
+    return await db.select().from(chatSessions).orderBy(desc(chatSessions.lastMessageAt));
+  }
+
+  async updateChatSession(id: string, updates: Partial<ChatSession>): Promise<ChatSession | undefined> {
+    const [session] = await db
+      .update(chatSessions)
+      .set(updates)
+      .where(eq(chatSessions.id, id))
+      .returning();
+    return session || undefined;
+  }
+
+  async getChatMessagesBySession(sessionId: string): Promise<ChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages.sessionId, sessionId))
+      .orderBy(chatMessages.createdAt);
+  }
+
+  async createChatMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
+    const [message] = await db.insert(chatMessages).values(insertMessage).returning();
     
-    return `*New Tour Booking Request*
-
-*Booking Details:*
-- Name: ${booking.name}
-- Email: ${booking.email}
-- Phone: ${booking.phone}
-
-*Tour Information:*
-- Tour: ${booking.tourName}
-- Date: ${booking.date}
-- Number of Guests: ${booking.guests}
-
-*Message:*
-${booking.message || "No additional message"}
-
-Total Estimate: ${totalPrice.toLocaleString()} PHP`;
+    await db
+      .update(chatSessions)
+      .set({ lastMessageAt: new Date() })
+      .where(eq(chatSessions.id, insertMessage.sessionId));
+    
+    return message;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

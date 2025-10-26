@@ -9,6 +9,7 @@ import { ChatboxWidget } from "@/components/ChatboxWidget";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
 import Tours from "@/pages/Tours";
+import Expeditions from "@/pages/Expeditions";
 import Gallery from "@/pages/Gallery";
 import BookingPage from "@/pages/Booking";
 import Contact from "@/pages/Contact";
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/tours" component={Tours} />
+      <Route path="/expeditions" component={Expeditions} />
       <Route path="/gallery" component={Gallery} />
       <Route path="/booking" component={BookingPage} />
       <Route path="/contact" component={Contact} />

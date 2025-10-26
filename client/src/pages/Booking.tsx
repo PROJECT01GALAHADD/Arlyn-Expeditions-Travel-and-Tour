@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { bookingSchema, type Booking, type Tour } from "@shared/schema";
+import { bookingFormSchema, type BookingForm, type Tour } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -46,11 +46,11 @@ export default function BookingPage() {
   });
 
   const bookingMutation = useMutation({
-    mutationFn: async (data: Booking) => {
+    mutationFn: async (data: BookingForm) => {
       return await apiRequest("POST", "/api/bookings", data);
     },
-    onSuccess: (response: any) => {
-      const whatsappUrl = `https://wa.me/639954948681?text=${encodeURIComponent(response.whatsappMessage)}`;
+    onSuccess: () => {
+      const whatsappUrl = `https://wa.me/639954948681`;
       window.open(whatsappUrl, "_blank");
       
       toast({
@@ -73,14 +73,14 @@ export default function BookingPage() {
     setValue,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<Booking>({
-    resolver: zodResolver(bookingSchema),
+  } = useForm<BookingForm>({
+    resolver: zodResolver(bookingFormSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       tourId: "",
-      tourName: "",
+      bookingType: "tour",
       date: "",
       guests: 2,
       message: "",
@@ -91,11 +91,11 @@ export default function BookingPage() {
   const selectedTour = tours?.find((t) => t.id === selectedTourId);
 
   const getTourImage = (tour: Tour | undefined) => {
-    if (!tour || !tour.images || tour.images.length === 0) return tourImage1;
-    return imageMap[tour.images[0]] || tourImage1;
+    if (!tour || !tour.imageUrl) return tourImage1;
+    return imageMap[tour.imageUrl] || tourImage1;
   };
 
-  const onSubmit = async (data: Booking) => {
+  const onSubmit = async (data: BookingForm) => {
     bookingMutation.mutate(data);
   };
 
@@ -173,10 +173,6 @@ export default function BookingPage() {
                       <Select
                         onValueChange={(value) => {
                           setValue("tourId", value);
-                          const tour = tours?.find((t) => t.id === value);
-                          if (tour) {
-                            setValue("tourName", tour.name);
-                          }
                         }}
                       >
                         <SelectTrigger data-testid="select-tour">
@@ -185,7 +181,7 @@ export default function BookingPage() {
                         <SelectContent>
                           {(tours || []).map((tour) => (
                             <SelectItem key={tour.id} value={tour.id}>
-                              {tour.name} - ₱{tour.price.toLocaleString()}
+                              {tour.name} - ₱{parseFloat(tour.rate).toLocaleString()}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -314,7 +310,7 @@ export default function BookingPage() {
                       <div className="border-t pt-4 space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Price per person:</span>
-                          <span className="font-semibold">₱{selectedTour.price.toLocaleString()}</span>
+                          <span className="font-semibold">₱{parseFloat(selectedTour.rate).toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span>Guests:</span>
@@ -323,7 +319,7 @@ export default function BookingPage() {
                         <div className="flex justify-between text-lg font-bold border-t pt-2">
                           <span>Total:</span>
                           <span className="text-primary">
-                            ₱{(selectedTour.price * guestCount).toLocaleString()}
+                            ₱{(parseFloat(selectedTour.rate) * guestCount).toLocaleString()}
                           </span>
                         </div>
                       </div>
