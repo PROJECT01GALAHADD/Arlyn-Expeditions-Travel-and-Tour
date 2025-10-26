@@ -1,0 +1,4 @@
+{
+  "/api/tours/route": "app/api/tours/route.js",
+  "/(public)/tours/page": "app/(public)/tours/page.js"
+}

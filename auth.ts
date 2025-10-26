@@ -9,6 +9,7 @@ import { z } from "zod";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "development-secret-change-in-production-abc123xyz789",
   providers: [
     Credentials({
       async authorize(credentials) {
