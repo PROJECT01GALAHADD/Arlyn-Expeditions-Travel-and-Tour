@@ -1,7 +1,10 @@
+"use client";
+
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { SiTiktok } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export function Footer() {
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -38,34 +41,34 @@ export function Footer() {
             <h4 className="text-lg font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-white/90">
               <li>
-                <a href="/" className="hover:text-primary transition-colors" data-testid="link-footer-home">
+                <Link href="/" className="hover:text-primary transition-colors" data-testid="link-footer-home">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/about" className="hover:text-primary transition-colors" data-testid="link-footer-about">
+                <Link href="/about" className="hover:text-primary transition-colors" data-testid="link-footer-about">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/tours" className="hover:text-primary transition-colors" data-testid="link-footer-tours">
+                <Link href="/tours" className="hover:text-primary transition-colors" data-testid="link-footer-tours">
                   Our Tours
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/gallery" className="hover:text-primary transition-colors" data-testid="link-footer-gallery">
-                  Gallery
-                </a>
+                <Link href="/expeditions" className="hover:text-primary transition-colors" data-testid="link-footer-expeditions">
+                  Expeditions
+                </Link>
               </li>
               <li>
-                <a href="/booking" className="hover:text-primary transition-colors" data-testid="link-footer-booking">
+                <Link href="/booking" className="hover:text-primary transition-colors" data-testid="link-footer-booking">
                   Book Now
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="hover:text-primary transition-colors" data-testid="link-footer-contact">
+                <Link href="/contact" className="hover:text-primary transition-colors" data-testid="link-footer-contact">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

@@ -1,0 +1,12 @@
+{
+  "sourceRoot": "external_imports/extracted/travel-agency",
+  "items": [
+    { "from": "components/theme-provider.tsx", "to": "components/theme-provider.tsx", "overwrite": false },
+    { "from": "components/ui", "to": "components/ui", "overwrite": false },
+    { "from": "public", "to": "attached_assets/travel-agency/public", "overwrite": false },
+    { "from": "hooks", "to": "attached_assets/travel-agency/hooks", "overwrite": false },
+    { "from": "lib", "to": "attached_assets/travel-agency/lib", "overwrite": false },
+    { "from": "styles", "to": "attached_assets/travel-agency/styles", "overwrite": false },
+    { "from": "app/globals.css", "to": "attached_assets/travel-agency/styles/globals.css", "overwrite": false }
+  ]
+}

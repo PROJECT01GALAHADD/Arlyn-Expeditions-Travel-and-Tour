@@ -1,13 +1,15 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoUrl from "@assets/Arlyn-Expeditions-Logo_1761120970967.png";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [location] = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,14 +21,13 @@ export function Navigation() {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [location]);
+  }, [pathname]);
 
   const navLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
     { path: "/tours", label: "Tours" },
     { path: "/expeditions", label: "Expeditions" },
-    { path: "/gallery", label: "Gallery" },
     { path: "/booking", label: "Booking" },
     { path: "/contact", label: "Contact" },
   ];
@@ -43,7 +44,7 @@ export function Navigation() {
             <Link href="/" data-testid="link-home-logo">
               <div className="cursor-pointer flex items-center gap-3">
                 <img 
-                  src={logoUrl} 
+                  src="/images/Arlyn-Expeditions-Logo_1761120970967.png" 
                   alt="Arlyn Expeditions" 
                   className="h-14 md:h-16 w-auto transition-all duration-300"
                 />
@@ -61,7 +62,7 @@ export function Navigation() {
                   <span
                     data-testid={`link-${link.label.toLowerCase()}`}
                     className={`text-sm font-semibold tracking-wide transition-colors cursor-pointer ${
-                      location === link.path
+                      pathname === link.path
                         ? "text-primary"
                         : isScrolled
                         ? "text-foreground hover:text-primary"
@@ -109,21 +110,22 @@ export function Navigation() {
                 <span
                   data-testid={`link-mobile-${link.label.toLowerCase()}`}
                   className={`text-2xl font-bold tracking-wide transition-colors cursor-pointer ${
-                    location === link.path ? "text-primary" : "text-white hover:text-primary"
+                    pathname === link.path ? "text-primary" : "text-white hover:text-primary"
                   }`}
                 >
                   {link.label}
                 </span>
               </Link>
             ))}
-            <Button
-              onClick={() => window.location.href = "/booking"}
-              data-testid="button-mobile-book-now"
-              size="lg"
-              className="font-semibold tracking-wide uppercase mt-4"
-            >
-              Book Now
-            </Button>
+            <Link href="/booking">
+              <Button
+                data-testid="button-mobile-book-now"
+                size="lg"
+                className="font-semibold tracking-wide uppercase mt-4"
+              >
+                Book Now
+              </Button>
+            </Link>
           </div>
         </div>
       )}

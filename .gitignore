@@ -4,3 +4,13 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# OpenMemory - IDE/Assistant specific rules
+.trae/rules/openmemory.md
+
+# External imports staging (ignore archives and extracted content)
+external_imports/zips/
+external_imports/extracted/
+!external_imports/README.md
+!external_imports/manifest.json
+.next/
