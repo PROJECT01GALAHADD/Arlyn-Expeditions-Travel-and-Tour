@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   },
 };
 
+import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
+import { Providers } from "@/components/providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +40,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={poppins.className}>
-        {children}
+        <Providers>
+          <Navigation />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
