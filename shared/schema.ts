@@ -23,6 +23,7 @@ export const tours = pgTable("tours", {
   destinations: text("destinations").notNull(),
   inclusions: text("inclusions").notNull(),
   imageUrl: text("image_url"),
+  images: text("images").array(),
   featured: boolean("featured").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

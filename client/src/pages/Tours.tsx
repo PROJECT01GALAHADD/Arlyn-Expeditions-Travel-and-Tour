@@ -5,12 +5,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, Users, Check } from "lucide-react";
+import { MapPin, Clock, Users, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Tour } from "@shared/schema";
 import defaultImage from "@assets/generated_images/Coron_islands_aerial_hero_f326fa4c.png";
 
 export default function Tours() {
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const { data: tours, isLoading } = useQuery<Tour[]>({
     queryKey: ["/api/tours"],
@@ -84,7 +85,12 @@ export default function Tours() {
         </div>
       </section>
 
-      <Dialog open={!!selectedTour} onOpenChange={(open) => !open && setSelectedTour(null)}>
+      <Dialog open={!!selectedTour} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedTour(null);
+          setCurrentImageIndex(0);
+        }
+      }}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           {selectedTour && (
             <>
@@ -93,12 +99,64 @@ export default function Tours() {
               </DialogHeader>
 
               <div className="space-y-6">
-                <div className="aspect-video rounded-lg overflow-hidden">
+                <div className="aspect-video rounded-lg overflow-hidden relative group">
                   <img
-                    src={selectedTour.imageUrl || defaultImage}
+                    src={
+                      selectedTour.images && selectedTour.images.length > 0
+                        ? selectedTour.images[currentImageIndex]
+                        : selectedTour.imageUrl || defaultImage
+                    }
                     alt={selectedTour.name}
                     className="w-full h-full object-cover"
                   />
+                  
+                  {selectedTour.images && selectedTour.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex((prev) => 
+                            prev === 0 ? selectedTour.images!.length - 1 : prev - 1
+                          );
+                        }}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        data-testid="button-prev-image"
+                      >
+                        <ChevronLeft className="w-6 h-6" />
+                      </button>
+                      
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentImageIndex((prev) => 
+                            prev === selectedTour.images!.length - 1 ? 0 : prev + 1
+                          );
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        data-testid="button-next-image"
+                      >
+                        <ChevronRight className="w-6 h-6" />
+                      </button>
+                      
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                        {selectedTour.images.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentImageIndex(idx);
+                            }}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              idx === currentImageIndex
+                                ? 'bg-white w-8'
+                                : 'bg-white/50 hover:bg-white/75'
+                            }`}
+                            data-testid={`button-indicator-${idx}`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-3">
