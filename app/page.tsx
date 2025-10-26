@@ -6,6 +6,7 @@ import { Calendar, Users, MapPin, Star, ChevronDown } from "lucide-react";
 import { db } from "@/lib/db";
 import { tours } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { Newsletter } from "@/components/Newsletter";
 
 export default async function Home() {
   const featuredTours = await db
@@ -187,6 +188,8 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      <Newsletter />
     </div>
   );
 }
