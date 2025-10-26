@@ -1,3 +1,6 @@
 {
-  "/page": "app/page.js"
+  "/api/tours/route": "app/api/tours/route.js",
+  "/page": "app/page.js",
+  "/(public)/tours/page": "app/(public)/tours/page.js",
+  "/(public)/about/page": "app/(public)/about/page.js"
 }
