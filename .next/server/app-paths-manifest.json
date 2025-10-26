@@ -1,3 +1,8 @@
 {
+  "/(public)/about/page": "app/(public)/about/page.js",
+  "/(public)/expeditions/page": "app/(public)/expeditions/page.js",
+  "/(public)/tours/page": "app/(public)/tours/page.js",
+  "/api/expeditions/route": "app/api/expeditions/route.js",
+  "/api/tours/route": "app/api/tours/route.js",
   "/page": "app/page.js"
 }
