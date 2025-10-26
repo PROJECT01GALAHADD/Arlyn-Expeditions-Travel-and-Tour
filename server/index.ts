@@ -7,9 +7,9 @@
 
 import { spawn } from "child_process";
 
-console.log("🚀 Starting Next.js development server...");
+console.log("🚀 Starting Next.js development server with Turbopack...");
 
-const nextDev = spawn("npx", ["next", "dev"], {
+const nextDev = spawn("npx", ["next", "dev", "--turbo"], {
   stdio: "inherit",
   shell: true,
   env: process.env,

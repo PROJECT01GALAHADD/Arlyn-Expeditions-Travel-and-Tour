@@ -21,7 +21,7 @@ export default async function Home() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(/images/arlyn-expeditions-3.png)` }}
         >
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30"></div>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">

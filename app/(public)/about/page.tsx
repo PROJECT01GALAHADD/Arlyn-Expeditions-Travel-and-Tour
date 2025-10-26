@@ -9,7 +9,7 @@ export default function AboutPage() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(/images/arlyn-expeditions-1.png)` }}
         >
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/20"></div>
         </div>
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl">

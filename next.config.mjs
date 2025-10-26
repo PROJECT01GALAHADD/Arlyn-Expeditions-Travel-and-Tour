@@ -13,6 +13,8 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
   },
+  turbopack: {},
+  reactStrictMode: true,
 };
 
 export default nextConfig;
