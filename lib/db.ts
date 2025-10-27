@@ -8,22 +8,26 @@ neonConfig.webSocketConstructor = ws;
 
 const connectionString = process.env.DATABASE_URL;
 
-// Provide a safe fallback in development when DATABASE_URL isn't set
-// to allow the app to run without a database.
+// Provide a safe fallback in development/preview when DATABASE_URL isn't set
+// to allow the app to run without a database while returning reasonable values.
 let db: any;
 if (connectionString) {
 	const pool = new Pool({ connectionString });
 	db = drizzle({ client: pool, schema });
 } else {
-	const noop = () => [] as unknown[];
+	const empty = async () => [] as unknown[];
 	db = {
 		select: () => ({
-			from: () => ({
-				where: () => ({
-					limit: noop,
-				}),
+			from: () => empty(),
+			where: () => ({
+				limit: () => empty(),
 			}),
 		}),
+		insert: () => ({ values: () => Promise.resolve({ rowsAffected: 0 }) }),
+		update: () => ({
+			set: () => ({ where: () => Promise.resolve({ rowsAffected: 0 }) }),
+		}),
+		delete: () => ({ where: () => Promise.resolve({ rowsAffected: 0 }) }),
 	} as const;
 }
 
