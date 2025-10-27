@@ -1,15 +1,13 @@
 import { Providers } from "@/components/providers";
 
 export default function PublicLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <Providers>
-      <div className="min-h-screen flex flex-col">
-        {children}
-      </div>
-    </Providers>
-  );
+	return (
+		<Providers>
+			<div className="min-h-screen flex flex-col">{children}</div>
+		</Providers>
+	);
 }

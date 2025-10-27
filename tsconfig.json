@@ -1,59 +1,40 @@
 {
-  "include": [
-    "client/src/**/*",
-    "server/**/*",
-    "shared/**/*",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "build",
-    "dist",
-    "**/*.test.ts"
-  ],
-  "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
-    "noEmit": true,
-    "module": "ESNext",
-    "strict": true,
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "bundler",
-    "baseUrl": ".",
-    "types": [
-      "node",
-      "vite/client"
-    ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@shared/*": [
-        "./shared/*"
-      ],
-      "@db/*": [
-        "./db/*"
-      ],
-      "@assets/*": [
-        "./attached_assets/*"
-      ]
-    },
-    "target": "ES2017",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  }
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"shared/**/*",
+		".next/types/**/*.ts"
+	],
+	"exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+	"compilerOptions": {
+		"incremental": true,
+		"tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
+		"noEmit": true,
+		"module": "ESNext",
+		"strict": true,
+		"lib": ["esnext", "dom", "dom.iterable"],
+		"jsx": "preserve",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"allowImportingTsExtensions": true,
+		"moduleResolution": "bundler",
+		"baseUrl": ".",
+		"types": ["node"],
+		"paths": {
+			"@/*": ["./*"],
+			"@shared/*": ["./shared/*"],
+			"@db/*": ["./db/*"],
+			"@assets/*": ["./attached_assets/*"]
+		},
+		"target": "ES2017",
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		]
+	}
 }

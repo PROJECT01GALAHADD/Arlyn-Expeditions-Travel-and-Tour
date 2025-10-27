@@ -1,39 +1,39 @@
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { bookings } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
+import { bookings } from "@/db/schema";
+import { db } from "@/lib/db";
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+	request: Request,
+	{ params }: { params: Promise<{ id: string }> },
 ) {
-  try {
-    const session = await auth();
-    
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+	try {
+		const session = await auth();
 
-    const { id } = await params;
-    const body = await request.json();
+		if (!session) {
+			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
-    const [updatedBooking] = await db
-      .update(bookings)
-      .set({ status: body.status })
-      .where(eq(bookings.id, id))
-      .returning();
+		const { id } = await params;
+		const body = await request.json();
 
-    if (!updatedBooking) {
-      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
-    }
+		const [updatedBooking] = await db
+			.update(bookings)
+			.set({ status: body.status })
+			.where(eq(bookings.id, id))
+			.returning();
 
-    return NextResponse.json(updatedBooking);
-  } catch (error) {
-    console.error("Error updating booking:", error);
-    return NextResponse.json(
-      { error: "Failed to update booking" },
-      { status: 500 }
-    );
-  }
+		if (!updatedBooking) {
+			return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+		}
+
+		return NextResponse.json(updatedBooking);
+	} catch (error) {
+		console.error("Error updating booking:", error);
+		return NextResponse.json(
+			{ error: "Failed to update booking" },
+			{ status: 500 },
+		);
+	}
 }
