@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar, Users, MapPin, Star, ChevronDown } from "lucide-react";
 import { db } from "@/lib/db";
-import { tours } from "@/db/schema";
+import { tours, Tour } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Newsletter } from "@/components/Newsletter";
 
 export default async function Home() {
-  const featuredTours =
+  const featuredTours: Tour[] =
     process.env.DATABASE_URL
       ? await db.select().from(tours).where(eq(tours.featured, true)).limit(3)
       : [];
