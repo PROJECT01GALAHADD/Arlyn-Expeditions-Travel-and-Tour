@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { bookings } from "@/db/schema";
+import { bookings, type Booking } from "@/db/schema";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export default async function AdminDashboard() {
     redirect("/admin/login");
   }
 
-  const allBookings = await db.select().from(bookings);
+  const allBookings: Booking[] = await db.select().from(bookings);
 
   return (
     <div className="min-h-screen p-8">
