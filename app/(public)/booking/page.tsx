@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/select";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const bookingFormSchema = z.object({
@@ -41,11 +41,11 @@ const bookingFormSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingFormSchema>;
 
-export default function BookingPage() {
+function BookingPageContent() {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  
+
   const tourId = searchParams.get("tourId");
   const expeditionId = searchParams.get("expeditionId");
   const bookingType = tourId ? "tour" : "expedition";
@@ -256,5 +256,13 @@ export default function BookingPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen pt-20">Loading...</div>}>
+      <BookingPageContent />
+    </Suspense>
   );
 }

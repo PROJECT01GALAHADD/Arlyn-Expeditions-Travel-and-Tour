@@ -8,6 +8,9 @@ import { tours, Tour } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { Newsletter } from "@/components/Newsletter";
 
+// Opt out of static prerendering to avoid database connections during build
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const featuredTours: Tour[] =
     process.env.DATABASE_URL
