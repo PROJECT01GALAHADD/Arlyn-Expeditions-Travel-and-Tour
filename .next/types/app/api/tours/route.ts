@@ -1,4 +1,4 @@
-// File: /home/runner/workspace/app/api/tours/route.ts
+// File: /Users/ORDEROFCODE/Arlyn-Expeditions-Travel-and-Tour/app/api/tours/route.ts
 import * as entry from '../../../../../app/api/tours/route.js'
 import type { NextRequest } from 'next/server.js'
 

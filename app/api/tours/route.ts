@@ -4,6 +4,11 @@ import { tours } from "@/db/schema";
 
 export async function GET() {
   try {
+    // If no database configured, return an empty list to keep UI stable
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json([]);
+    }
+
     const allTours = await db.select().from(tours);
     return NextResponse.json(allTours);
   } catch (error) {

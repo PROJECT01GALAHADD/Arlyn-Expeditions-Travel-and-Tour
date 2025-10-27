@@ -3,7 +3,7 @@
 
 type AppRoutes = "/" | "/about" | "/admin" | "/admin/login" | "/booking" | "/contact" | "/expeditions" | "/tours"
 type AppRouteHandlerRoutes = "/api/auth/[...nextauth]" | "/api/bookings" | "/api/bookings/[id]" | "/api/expeditions" | "/api/tours"
-type PageRoutes = never
+type PageRoutes = "/About" | "/Admin" | "/Booking" | "/Contact" | "/Expeditions" | "/Gallery" | "/Home" | "/Tours" | "/not-found"
 type LayoutRoutes = "/"
 type RedirectRoutes = never
 type RewriteRoutes = never
@@ -13,7 +13,9 @@ type Routes = AppRoutes | PageRoutes | LayoutRoutes | RedirectRoutes | RewriteRo
 interface ParamMap {
   "/": {}
   "/about": {}
+  "/About": {}
   "/admin": {}
+  "/Admin": {}
   "/admin/login": {}
   "/api/auth/[...nextauth]": { "nextauth": string[]; }
   "/api/bookings": {}
@@ -21,9 +23,16 @@ interface ParamMap {
   "/api/expeditions": {}
   "/api/tours": {}
   "/booking": {}
+  "/Booking": {}
   "/contact": {}
+  "/Contact": {}
   "/expeditions": {}
+  "/Expeditions": {}
+  "/Gallery": {}
+  "/Home": {}
+  "/not-found": {}
   "/tours": {}
+  "/Tours": {}
 }
 
 

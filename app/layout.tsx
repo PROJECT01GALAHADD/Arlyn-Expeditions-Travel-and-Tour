@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
+import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
 import { Providers } from "@/components/providers";
 
 export default function RootLayout({

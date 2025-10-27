@@ -1,27 +1,27 @@
 {
   "pages": {
     "/page": [
-      "static/chunks/[root-of-the-server]__8ae00963._.css",
-      "static/chunks/node_modules_next_02beae46._.js",
-      "static/chunks/node_modules_react-icons_si_index_mjs_86623806._.js",
-      "static/chunks/node_modules_react-icons_lib_844c6c50._.js",
-      "static/chunks/node_modules_@tanstack_query-core_build_modern_31e467a3._.js",
-      "static/chunks/node_modules_d6333d7d._.js",
-      "static/chunks/_5fb276c6._.js",
-      "static/chunks/app_layout_tsx_0a548d63._.js",
-      "static/chunks/node_modules_next_dist_client_components_builtin_global-error_deaf9a85.js",
-      "static/chunks/node_modules_127f696e._.js",
-      "static/chunks/_4c12aee5._.js",
-      "static/chunks/app_page_tsx_deaf9a85._.js",
-      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_57d40746._.js",
-      "static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js",
-      "static/chunks/node_modules_next_dist_compiled_next-devtools_index_a9cb0712.js",
-      "static/chunks/node_modules_next_dist_compiled_5150ccfd._.js",
-      "static/chunks/node_modules_next_dist_client_cf1d9188._.js",
-      "static/chunks/node_modules_next_dist_b0daae9a._.js",
-      "static/chunks/node_modules_@swc_helpers_cjs_b3dc30d6._.js",
-      "static/chunks/_a0ff3932._.js",
-      "static/chunks/turbopack-_cdba956c._.js"
+      "static/chunks/[root-of-the-server]__09e5ff4d._.css",
+      "static/chunks/ff94e_next_174d7dca._.js",
+      "static/chunks/ff94e_react-icons_si_index_mjs_0a85145c._.js",
+      "static/chunks/ff94e_react-icons_lib_050f5576._.js",
+      "static/chunks/ff94e_@tanstack_query-core_build_modern_2f4be97a._.js",
+      "static/chunks/ff94e_adb9ec68._.js",
+      "static/chunks/Arlyn-Expeditions-Travel-and-Tour_9418fff8._.js",
+      "static/chunks/Arlyn-Expeditions-Travel-and-Tour_app_layout_tsx_93436fdb._.js",
+      "static/chunks/ff94e_next_dist_client_components_builtin_global-error_d225ee5e.js",
+      "static/chunks/ff94e_53a44151._.js",
+      "static/chunks/Arlyn-Expeditions-Travel-and-Tour_e44bc2f0._.js",
+      "static/chunks/Arlyn-Expeditions-Travel-and-Tour_app_page_tsx_d225ee5e._.js",
+      "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_2987d197._.js",
+      "static/chunks/ff94e_next_dist_compiled_react-dom_54fb42ca._.js",
+      "static/chunks/ff94e_next_dist_compiled_next-devtools_index_d37fb6ca.js",
+      "static/chunks/ff94e_next_dist_compiled_1a972fa9._.js",
+      "static/chunks/ff94e_next_dist_client_6134427f._.js",
+      "static/chunks/ff94e_next_dist_a7867670._.js",
+      "static/chunks/ff94e_@swc_helpers_cjs_6debe858._.js",
+      "static/chunks/Arlyn-Expeditions-Travel-and-Tour_a0ff3932._.js",
+      "static/chunks/turbopack-Arlyn-Expeditions-Travel-and-Tour_156de686._.js"
     ]
   }
 }

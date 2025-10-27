@@ -5,7 +5,16 @@ self.__BUILD_MANIFEST = {
     "fallback": []
   },
   "sortedPages": [
+    "/About",
+    "/Admin",
+    "/Booking",
+    "/Contact",
+    "/Expeditions",
+    "/Gallery",
+    "/Home",
+    "/Tours",
     "/_app",
-    "/_error"
+    "/_error",
+    "/not-found"
   ]
 };self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()

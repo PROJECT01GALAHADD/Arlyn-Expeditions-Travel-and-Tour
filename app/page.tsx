@@ -9,11 +9,10 @@ import { eq } from "drizzle-orm";
 import { Newsletter } from "@/components/Newsletter";
 
 export default async function Home() {
-  const featuredTours = await db
-    .select()
-    .from(tours)
-    .where(eq(tours.featured, true))
-    .limit(3);
+  const featuredTours =
+    process.env.DATABASE_URL
+      ? await db.select().from(tours).where(eq(tours.featured, true)).limit(3)
+      : [];
 
   return (
     <div className="min-h-screen">
