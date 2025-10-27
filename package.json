@@ -113,6 +113,6 @@
     "bufferutil": "^4.0.8"
   },
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   }
 }
