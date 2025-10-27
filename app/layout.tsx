@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 	},
 };
 
-import { Footer } from "@/components/footer";
+import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/navigation";
 import { Providers } from "@/components/providers";
 
