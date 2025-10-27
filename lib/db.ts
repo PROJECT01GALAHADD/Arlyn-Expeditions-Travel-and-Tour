@@ -15,19 +15,29 @@ if (connectionString) {
 	const pool = new Pool({ connectionString });
 	db = drizzle({ client: pool, schema });
 } else {
-	const empty = async () => [] as unknown[];
+	// Chainable thenable builder that resolves to an empty array when awaited.
+	const emptyArrayResult = [] as unknown[];
+	const chainableArrayBuilder = {
+		from: () => chainableArrayBuilder,
+		where: () => chainableArrayBuilder,
+		limit: () => chainableArrayBuilder,
+		then: (resolve: (value: unknown[]) => void) => resolve(emptyArrayResult),
+	} as const;
+
+	// Chainable thenable builder for write ops that resolves to an ack object.
+	const ack = { rowsAffected: 0 } as const;
+	const chainableAckBuilder = {
+		values: () => chainableAckBuilder,
+		set: () => chainableAckBuilder,
+		where: () => chainableAckBuilder,
+		then: (resolve: (value: typeof ack) => void) => resolve(ack),
+	} as const;
+
 	db = {
-		select: () => ({
-			from: () => empty(),
-			where: () => ({
-				limit: () => empty(),
-			}),
-		}),
-		insert: () => ({ values: () => Promise.resolve({ rowsAffected: 0 }) }),
-		update: () => ({
-			set: () => ({ where: () => Promise.resolve({ rowsAffected: 0 }) }),
-		}),
-		delete: () => ({ where: () => Promise.resolve({ rowsAffected: 0 }) }),
+		select: () => chainableArrayBuilder,
+		insert: () => chainableAckBuilder,
+		update: () => chainableAckBuilder,
+		delete: () => chainableAckBuilder,
 	} as const;
 }
 
